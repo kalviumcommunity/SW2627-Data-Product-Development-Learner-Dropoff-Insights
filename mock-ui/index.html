@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Learner Drop-off Insights Mock UI</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Dashboard navigation">
+        <div class="brand">
+          <span class="brand-mark">LD</span>
+          <div>
+            <h1>Learner Drop-off Insights</h1>
+            <p>Predictive behaviour dashboard</p>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <a class="active" href="#overview">Overview</a>
+          <a href="#drivers">Behaviour Drivers</a>
+          <a href="#risk-list">Learner Risk List</a>
+          <a href="#quality">Data Quality</a>
+        </nav>
+
+        <div class="owner-box">
+          <h2>Contribution Lanes</h2>
+          <p><strong>Monesh</strong><br>Data Engineer: SQL data layer and validation</p>
+          <p><strong>Jaswanth</strong><br>Data Analyst: labels, features, and findings</p>
+          <p><strong>Shaswath</strong><br>Dashboard Owner: dashboard, CI, and docs</p>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Academic success dashboard</p>
+            <h2>Find silent drop-offs before they become permanent</h2>
+          </div>
+          <div class="status-pill">Mock data only</div>
+        </header>
+
+        <section class="filters" aria-label="Global filters">
+          <label>
+            Course
+            <select>
+              <option>All courses</option>
+              <option>Python Foundations</option>
+              <option>Data Analytics Bootcamp</option>
+              <option>SQL for Analysts</option>
+            </select>
+          </label>
+          <label>
+            Cohort
+            <select>
+              <option>All cohorts</option>
+              <option>Jan 2026</option>
+              <option>Feb 2026</option>
+              <option>Mar 2026</option>
+            </select>
+          </label>
+          <label>
+            Risk bucket
+            <select>
+              <option>All risk levels</option>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+          </label>
+          <label>
+            Date range
+            <select>
+              <option>Last 90 days</option>
+              <option>Last 60 days</option>
+              <option>Last 30 days</option>
+            </select>
+          </label>
+        </section>
+
+        <section id="overview" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h3>Current learner health</h3>
+            </div>
+            <p class="source-note">Last pipeline run: Jul 13, 2026, 09:30 IST</p>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric-card good">
+              <span>Completion rate</span>
+              <strong>61.8%</strong>
+              <p>+4.2 pts versus previous cohort</p>
+            </article>
+            <article class="metric-card danger">
+              <span>Silent drop-off rate</span>
+              <strong>18.6%</strong>
+              <p>132 learners inactive beyond threshold</p>
+            </article>
+            <article class="metric-card warn">
+              <span>High-risk learners</span>
+              <strong>47</strong>
+              <p>Need mentor review this week</p>
+            </article>
+            <article class="metric-card neutral">
+              <span>Median inactivity gap</span>
+              <strong>11 days</strong>
+              <p>Across active and inactive learners</p>
+            </article>
+          </div>
+
+          <div class="content-grid two-col">
+            <article class="panel">
+              <div class="panel-heading">
+                <h4>Completion versus drop-off trend</h4>
+                <span>Monesh + Shaswath</span>
+              </div>
+              <div class="trend-chart" aria-label="Completion versus drop-off trend mock chart">
+                <div class="trend-row">
+                  <span>Week 1</span>
+                  <div class="bar-track"><div class="bar complete" style="width: 72%"></div><div class="bar drop" style="width: 12%"></div></div>
+                </div>
+                <div class="trend-row">
+                  <span>Week 2</span>
+                  <div class="bar-track"><div class="bar complete" style="width: 66%"></div><div class="bar drop" style="width: 16%"></div></div>
+                </div>
+                <div class="trend-row">
+                  <span>Week 3</span>
+                  <div class="bar-track"><div class="bar complete" style="width: 61%"></div><div class="bar drop" style="width: 20%"></div></div>
+                </div>
+                <div class="trend-row">
+                  <span>Week 4</span>
+                  <div class="bar-track"><div class="bar complete" style="width: 58%"></div><div class="bar drop" style="width: 23%"></div></div>
+                </div>
+              </div>
+              <div class="legend">
+                <span><i class="legend-complete"></i>Completion</span>
+                <span><i class="legend-drop"></i>Silent drop-off</span>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading">
+                <h4>Top predictive behaviours</h4>
+                <span>Jaswanth + Shaswath</span>
+              </div>
+              <ol class="driver-list">
+                <li>
+                  <div>
+                    <strong>Long inactivity gap after early activity</strong>
+                    <p>Strongest drop-off signal</p>
+                  </div>
+                  <span class="risk-score">0.82</span>
+                </li>
+                <li>
+                  <div>
+                    <strong>Quiz scores decline across attempts</strong>
+                    <p>Linked to lower completion odds</p>
+                  </div>
+                  <span class="risk-score">0.69</span>
+                </li>
+                <li>
+                  <div>
+                    <strong>Consistent first-week sessions</strong>
+                    <p>Completion-positive behaviour</p>
+                  </div>
+                  <span class="risk-score positive">0.63</span>
+                </li>
+              </ol>
+            </article>
+          </div>
+        </section>
+
+        <section id="drivers" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Behaviour Drivers</p>
+              <h3>What separates completions from silent drop-offs</h3>
+            </div>
+          </div>
+
+          <div class="content-grid two-col">
+            <article class="panel">
+              <div class="panel-heading">
+                <h4>Driver strength</h4>
+                <span>Jaswanth owns analysis</span>
+              </div>
+              <div class="horizontal-bars">
+                <div class="hbar-row">
+                  <span>Inactivity gap</span>
+                  <div><b style="width: 82%"></b></div>
+                  <em>Drop-off</em>
+                </div>
+                <div class="hbar-row">
+                  <span>Quiz decline</span>
+                  <div><b style="width: 69%"></b></div>
+                  <em>Drop-off</em>
+                </div>
+                <div class="hbar-row">
+                  <span>Retry rate</span>
+                  <div><b style="width: 54%"></b></div>
+                  <em>Completion</em>
+                </div>
+                <div class="hbar-row">
+                  <span>Session streak</span>
+                  <div><b style="width: 48%"></b></div>
+                  <em>Completion</em>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading">
+                <h4>Completed versus dropped learners</h4>
+                <span>Shared data contract</span>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>Completed</th>
+                    <th>Silent drop-off</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Median active days</td>
+                    <td>22</td>
+                    <td>7</td>
+                  </tr>
+                  <tr>
+                    <td>Average quiz score</td>
+                    <td>78%</td>
+                    <td>54%</td>
+                  </tr>
+                  <tr>
+                    <td>Longest inactivity gap</td>
+                    <td>5 days</td>
+                    <td>18 days</td>
+                  </tr>
+                  <tr>
+                    <td>Retry rate after failed quiz</td>
+                    <td>64%</td>
+                    <td>19%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </article>
+          </div>
+        </section>
+
+        <section id="risk-list" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Learner Risk List</p>
+              <h3>Intervention queue</h3>
+            </div>
+            <button type="button">Export CSV</button>
+          </div>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <h4>Highest-risk learners</h4>
+              <span>Jaswanth risk logic, Shaswath table</span>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Learner</th>
+                  <th>Course</th>
+                  <th>Risk</th>
+                  <th>Days inactive</th>
+                  <th>Latest quiz</th>
+                  <th>Primary reason</th>
+                  <th>Suggested action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>LRN-1042</td>
+                  <td>Python Foundations</td>
+                  <td><span class="tag high">High</span></td>
+                  <td>19</td>
+                  <td>42%</td>
+                  <td>Low quiz then inactive</td>
+                  <td>Offer quiz support</td>
+                </tr>
+                <tr>
+                  <td>LRN-1187</td>
+                  <td>SQL for Analysts</td>
+                  <td><span class="tag high">High</span></td>
+                  <td>16</td>
+                  <td>58%</td>
+                  <td>Progress stalled</td>
+                  <td>Recommend next module</td>
+                </tr>
+                <tr>
+                  <td>LRN-1215</td>
+                  <td>Data Analytics Bootcamp</td>
+                  <td><span class="tag medium">Medium</span></td>
+                  <td>9</td>
+                  <td>66%</td>
+                  <td>Session streak broken</td>
+                  <td>Send check-in reminder</td>
+                </tr>
+                <tr>
+                  <td>LRN-1301</td>
+                  <td>Python Foundations</td>
+                  <td><span class="tag low">Low</span></td>
+                  <td>3</td>
+                  <td>81%</td>
+                  <td>Healthy activity</td>
+                  <td>No action needed</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+        </section>
+
+        <section id="quality" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Data Quality</p>
+              <h3>Can we trust this dashboard?</h3>
+            </div>
+          </div>
+
+          <div class="content-grid three-col">
+            <article class="quality-card pass">
+              <span>Required columns</span>
+              <strong>Passed</strong>
+              <p>All expected source fields found.</p>
+            </article>
+            <article class="quality-card warn">
+              <span>Missing quiz scores</span>
+              <strong>Warning</strong>
+              <p>2.4% of quiz rows need handling.</p>
+            </article>
+            <article class="quality-card pass">
+              <span>Duplicate enrollments</span>
+              <strong>Passed</strong>
+              <p>0 duplicate learner-course keys.</p>
+            </article>
+          </div>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <h4>Pipeline ownership</h4>
+              <span>Monesh + Shaswath</span>
+            </div>
+            <div class="pipeline">
+              <div>
+                <strong>Raw CSV</strong>
+                <span>Source files</span>
+              </div>
+              <div>
+                <strong>SQLite</strong>
+                <span>Clean tables</span>
+              </div>
+              <div>
+                <strong>Pandas</strong>
+                <span>Features and labels</span>
+              </div>
+              <div>
+                <strong>Analysis</strong>
+                <span>Drivers and risk</span>
+              </div>
+              <div>
+                <strong>Streamlit</strong>
+                <span>Dashboard</span>
+              </div>
+              <div>
+                <strong>GitHub Actions</strong>
+                <span>Validation on PR</span>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
