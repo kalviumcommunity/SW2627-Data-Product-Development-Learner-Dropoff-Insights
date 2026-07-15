@@ -4,77 +4,76 @@ Owner: Shaswath
 
 ## Purpose
 
-This document defines how each learner-course record will be labeled for analysis.
-
-The labels are required before we can compare completed learners against silent drop-offs or build risk buckets for the dashboard.
+This document defines how each learner-course record is labeled for analysis. These labels segment learners into distinct states to support behavior driver analysis and prioritize mentor outreach.
 
 ## Output Grain
 
-One row per learner-course enrollment.
+- **Grain**: One row per learner-course enrollment (`learner_id`, `course_id`).
 
-## Labels
+## Labeling Definitions & Rules
 
-### completed
+To prevent overlap and ensure deterministic assignment, labels are evaluated sequentially in the priority order defined below.
 
-A learner is labeled `completed` when any of the following is true:
+### 1. completed
+A learner has successfully finished the course.
+- **Criteria** (Any of the following):
+  - `completion_status` is one of: `'completed'`, `'complete'`, `'passed'`, or `'certified'` (case-insensitive).
+  - `completion_date` is not null and not empty.
+  - `progress_percent` is $\ge$ 90% (normalized value $\ge 0.90$).
 
-- `completion_status` is one of `completed`, `complete`, `passed`, or `certified`.
-- `completion_date` is present.
-- `progress_percent >= 90`.
+### 2. unstarted
+A learner has enrolled but has not performed any meaningful course activity.
+- **Criteria**: No meaningful activity is recorded. Meaningful activity is defined as:
+  - `total_sessions > 0` OR
+  - `quiz_attempt_count > 0` OR
+  - `progress_percent > 0`
 
-### silent_dropoff
+### 3. silent_dropoff
+A learner was active previously but has stopped participating, showing no activity for an extended duration.
+- **Criteria**:
+  - Must not be `completed`.
+  - Must have meaningful earlier activity (i.e. not `unstarted`).
+  - `days_since_last_activity >= inactivity_threshold_days` (Default: **21 days**).
 
-A learner is labeled `silent_dropoff` when all conditions are true:
+### 4. at_risk
+A learner is currently active or recently inactive but exhibits behavioral warning signs that predict potential drop-off.
+- **Criteria** (Must not be `completed`, `unstarted`, or `silent_dropoff`, and any of the following is true):
+  - **Academic Challenge**: The latest quiz score is low (`latest_quiz_score < 50` out of 100).
+  - **Activity Gap**: Inactivity is growing (`days_since_last_activity >= max(10, inactivity_threshold_days // 2)`). With the default threshold of 21 days, this triggers at $\ge 10$ days.
+  - **Stalled Progress**: The learner has low progress ($< 50\%$) and has been inactive for $\ge 10$ days.
 
-- The learner is not completed.
-- The learner had meaningful earlier activity.
-- `days_since_last_activity >= inactivity_threshold_days`.
+### 5. active
+A learner is engaged and progressing through the course normally.
+- **Criteria**: Any learner who is not `completed`, `unstarted`, `silent_dropoff`, or `at_risk`.
 
-Initial threshold:
+---
 
-- 21 days.
+## Evaluation Order (Priority)
 
-This threshold can be adjusted after inspecting course duration and activity date range.
+Labels must be resolved in this exact sequence:
 
-### at_risk
+```mermaid
+graph TD
+    A[Start] --> B{Is Completed?}
+    B -- Yes --> C[Label: completed]
+    B -- No --> D{Has Meaningful Activity?}
+    D -- No --> E[Label: unstarted]
+    D -- Yes --> F{Days Inactive >= Threshold?}
+    F -- Yes --> G[Label: silent_dropoff]
+    F -- No --> H{Has Risk Signals?}
+    H -- Yes --> I[Label: at_risk]
+    H -- No --> J[Label: active]
+```
 
-A learner is labeled `at_risk` when the learner is not completed and shows warning behaviour, such as:
+---
 
-- `days_since_last_activity >= 10`
-- latest quiz score is below 50 percent
-- progress appears stalled
-- session activity has dropped sharply
+## Critical Blockers & Warnings
 
-### active
-
-A learner is labeled `active` when the learner is not completed, not a silent drop-off, and not currently at risk.
-
-### unstarted
-
-A learner is labeled `unstarted` when there is an enrollment but no meaningful session, quiz, or progress activity.
-
-## Meaningful Activity
-
-Meaningful activity exists when at least one of these is true:
-
-- total sessions is greater than zero
-- quiz attempts are greater than zero
-- progress percentage is greater than zero
-
-## Label Priority
-
-Labels must be assigned in this order:
-
-1. completed
-2. unstarted
-3. silent_dropoff
-4. at_risk
-5. active
-
-This prevents one learner-course row from receiving multiple statuses.
-
-## Caveats
-
-- The labels identify behavioural patterns, not causal proof.
-- The inactivity threshold must be validated against the dataset date range.
-- A learner can be inactive for valid reasons outside the dataset, so the dashboard should show risk reasons rather than final judgments.
+> [!WARNING]
+> **Data Availability Requirements**:
+> The feature pipeline relies on specific aggregate fields from the data engineering stage. If any of the following fields are absent from the input:
+> - `completion_status`, `completion_date`, or `progress_percent`: **completed** labels cannot be computed.
+> - `latest_activity_date` or `days_since_last_activity`: **silent_dropoff** and **at_risk** labels cannot be computed.
+> - `latest_quiz_score`: **at_risk** academic challenge signals cannot be identified.
+>
+> If these fields are missing, the pipeline will fallback to safe defaults (e.g. treating them as 0 or empty) to prevent system failure, but the resulting labels will be inaccurate. This should be treated as a pipeline blocking issue.
