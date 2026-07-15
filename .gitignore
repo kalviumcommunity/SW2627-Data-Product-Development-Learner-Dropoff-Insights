@@ -1,0 +1,7 @@
+# Python generated files
+__pycache__/
+*.py[cod]
+
+# Generated data-layer outputs
+data/processed/*.sqlite
+data/processed/*.db
