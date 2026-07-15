@@ -42,7 +42,7 @@ Evidence for viva:
 - PRs for ingestion scripts, SQL queries, and validation checks.
 - Explanation of cleaning rules and why they are safe.
 
-### Jaswanth: Data Analyst - Feature and Insights Owner
+### Shaswath: Data Analyst - Feature and Insights Owner
 
 Owns the analytical answer to the problem statement.
 
@@ -58,12 +58,12 @@ Evidence for viva:
 - Labeling logic and assumptions.
 - Ranked insights explaining which behaviours matter most.
 
-### Shaswath: Dashboard and Automation Owner
+### Jaswanth: Dashboard and Automation Owner
 
 Owns the user-facing product and delivery workflow.
 
 - Build the Streamlit dashboard from clean DB tables and feature outputs.
-- Create charts, filters, learner risk table, and data quality status views.
+- Create charts, filters, learner risk table, and dashboard navigation views.
 - Set up GitHub Actions for pipeline checks and basic tests.
 - Own README updates, setup instructions, dashboard screenshots, and deployment notes.
 - Keep the mock UI aligned with the final dashboard.

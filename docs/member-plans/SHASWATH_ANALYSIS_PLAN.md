@@ -1,8 +1,8 @@
-# Jaswanth - Data Analyst Plan
+# Shaswath - Data Analyst Plan
 
 ## Role
 
-Jaswanth owns feature engineering, completion/drop-off labeling, and behaviour insight generation for Learner Drop-off Insights.
+Shaswath owns feature engineering, completion/drop-off labeling, and behaviour insight generation for Learner Drop-off Insights.
 
 Primary responsibility:
 
@@ -113,7 +113,7 @@ Needs a clean learner-course aggregate table containing:
 - session aggregates
 - quiz aggregates
 
-### To Shaswath
+### To Jaswanth
 
 Provide dashboard-ready outputs:
 
@@ -138,7 +138,7 @@ Required learner risk fields:
 Branch name suggestion:
 
 ```text
-jaswanth/analysis-plan
+shaswath/analysis-plan
 ```
 
 PR title:
@@ -149,7 +149,7 @@ Add analysis plan for learner drop-off behaviour features
 
 This PR includes:
 
-- Jaswanth's analysis responsibilities.
+- Shaswath's analysis responsibilities.
 - Label definitions.
 - Feature list.
 - Behaviour ranking method.
@@ -173,7 +173,7 @@ This PR includes:
 
 ## Viva Preparation
 
-Jaswanth should be ready to explain:
+Shaswath should be ready to explain:
 
 - Why the label definition is defensible.
 - How silent drop-off differs from not started.

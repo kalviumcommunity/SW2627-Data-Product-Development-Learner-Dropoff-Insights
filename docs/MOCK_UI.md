@@ -13,7 +13,6 @@ Help academic success mentors identify which learners are at risk of silent drop
 - Summary first: the first screen should answer "How serious is the drop-off problem right now?"
 - Explainable risk: every risk score must have a plain-language reason.
 - Actionable table: mentors should be able to decide who to contact next.
-- Trust visible: data freshness and validation status should be easy to find.
 - Three-way ownership: each screen should show visible contribution from the assigned team roles.
 
 ## Global Navigation
@@ -23,7 +22,6 @@ Help academic success mentors identify which learners are at risk of silent drop
 1. Overview
 2. Behaviour Drivers
 3. Learner Risk List
-4. Data Quality
 
 ### Global Filters
 
@@ -63,8 +61,8 @@ Bottom row:
 ### Ownership
 
 - Monesh provides SQL aggregates for learner counts, statuses, and inactivity gaps.
-- Jaswanth provides risk labels, behaviour driver ranking, and interpretation.
-- Shaswath builds cards, charts, filters, and layout in Streamlit.
+- Shaswath provides risk labels, behaviour driver ranking, and interpretation.
+- Jaswanth builds cards, charts, filters, and layout in Streamlit.
 
 ### Acceptance Criteria
 
@@ -107,8 +105,8 @@ Lower section:
 ### Ownership
 
 - Monesh provides clean aggregate input tables.
-- Jaswanth owns feature ranking and findings.
-- Shaswath owns visual encoding and interaction.
+- Shaswath owns feature ranking and findings.
+- Jaswanth owns visual encoding and interaction.
 
 ### Acceptance Criteria
 
@@ -159,52 +157,14 @@ Row styling:
 ### Ownership
 
 - Monesh ensures learner-course keys and latest activity are accurate.
-- Jaswanth generates risk score, risk bucket, reason, and suggested action logic.
-- Shaswath builds the searchable and sortable table.
+- Shaswath generates risk score, risk bucket, reason, and suggested action logic.
+- Jaswanth builds the searchable and sortable table.
 
 ### Acceptance Criteria
 
 - Table defaults to highest risk first.
 - Every high-risk learner has a reason.
 - Users can filter down to one course or cohort.
-
-## Screen 4: Data Quality
-
-### Purpose
-
-Show whether the dashboard can be trusted.
-
-### Layout
-
-Top:
-
-- Last pipeline run status.
-- Last data refresh date.
-- Total rows processed.
-- Failed validation checks.
-
-Middle:
-
-- Row count by table.
-- Missing value summary.
-- Duplicate count summary.
-
-Bottom:
-
-- GitHub Actions status.
-- Recent validation messages.
-
-### Ownership
-
-- Monesh owns row-level validation and SQL quality checks.
-- Jaswanth validates label and feature output consistency.
-- Shaswath displays status and wires GitHub Actions output into documentation or dashboard.
-
-### Acceptance Criteria
-
-- Data issues are visible instead of hidden.
-- Validation names are understandable.
-- The page distinguishes warning from failure.
 
 ## Static Mock
 
@@ -230,7 +190,6 @@ Suggested Streamlit pages:
 src/dashboard/pages/1_Overview.py
 src/dashboard/pages/2_Behaviour_Drivers.py
 src/dashboard/pages/3_Learner_Risk_List.py
-src/dashboard/pages/4_Data_Quality.py
 ```
 
 Suggested shared data loading:
@@ -242,9 +201,8 @@ src/dashboard/data_access.py
 Dashboard inputs:
 
 - SQLite DB from Monesh.
-- Feature table from Jaswanth.
-- Behaviour driver table from Jaswanth.
-- Validation output from Monesh and Shaswath.
+- Feature table from Shaswath.
+- Behaviour driver table from Shaswath.
 
 ## Mock Data Fields Needed
 
@@ -280,14 +238,6 @@ Dashboard inputs:
 - primary_risk_reason
 - suggested_action
 
-### Data Quality Layer
-
-- check_name
-- status
-- failed_row_count
-- message
-- last_run_at
-
 ## PR Breakdown Suggestion
 
 ### PR 1: Planning Artifacts
@@ -309,7 +259,7 @@ Owner: Monesh.
 
 ### PR 3: Labeling and Feature Contract
 
-Owner: Jaswanth.
+Owner: Shaswath.
 
 - Label definitions.
 - Feature list.
@@ -317,7 +267,7 @@ Owner: Jaswanth.
 
 ### PR 4: Dashboard Scaffold and CI Plan
 
-Owner: Shaswath.
+Owner: Jaswanth.
 
 - Streamlit app shell.
 - Page structure.

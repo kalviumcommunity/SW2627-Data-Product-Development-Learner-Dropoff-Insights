@@ -281,7 +281,7 @@ Acceptance criteria:
 
 The system must assign completion/drop-off labels at learner-course level.
 
-Owner: Jaswanth
+Owner: Shaswath
 
 Acceptance criteria:
 
@@ -293,7 +293,7 @@ Acceptance criteria:
 
 The system must generate behavioural features in Pandas.
 
-Owner: Jaswanth
+Owner: Shaswath
 
 Acceptance criteria:
 
@@ -305,7 +305,7 @@ Acceptance criteria:
 
 The system must rank behaviours that predict completion or drop-off.
 
-Owner: Jaswanth
+Owner: Shaswath
 
 Acceptance criteria:
 
@@ -317,7 +317,7 @@ Acceptance criteria:
 
 The dashboard must show the overall course completion and drop-off situation.
 
-Owner: Shaswath
+Owner: Jaswanth
 
 Acceptance criteria:
 
@@ -329,7 +329,7 @@ Acceptance criteria:
 
 The dashboard must provide a list of learners who need attention.
 
-Owner: Shaswath
+Owner: Jaswanth
 
 Acceptance criteria:
 
@@ -341,7 +341,7 @@ Acceptance criteria:
 
 The project must validate data and pipeline health.
 
-Owner: Shaswath with inputs from Monesh
+Owner: Jaswanth with inputs from Monesh
 
 Acceptance criteria:
 
@@ -388,19 +388,6 @@ Components:
 - Learner risk table.
 - Filters for course, cohort, risk, and reason.
 - Suggested next action.
-
-### Page 4: Data Quality
-
-Purpose:
-
-- Make pipeline trust visible.
-
-Components:
-
-- Last pipeline run status.
-- Row counts by table.
-- Failed validation checks.
-- Missing values summary.
 
 ## MVP Scope
 
@@ -497,14 +484,14 @@ Mitigation:
 - Which data quality checks protect the dashboard.
 - How SQL aggregations support feature engineering.
 
-### Jaswanth Must Be Able To Explain
+### Shaswath Must Be Able To Explain
 
 - How completion and silent drop-off are labeled.
 - Which features were engineered and why.
 - Which behaviours best predict completion/drop-off.
 - What the analysis can and cannot prove.
 
-### Shaswath Must Be Able To Explain
+### Jaswanth Must Be Able To Explain
 
 - How the dashboard supports mentor decisions.
 - How filters and charts connect to the data outputs.

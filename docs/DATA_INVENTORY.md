@@ -127,7 +127,7 @@ Required:
 
 ## Handoff To Analysis
 
-The first data handoff to Jaswanth will be a learner-course aggregate output with these fields:
+The first data handoff to Shaswath will be a learner-course aggregate output with these fields:
 
 - learner_id
 - course_id

@@ -1,6 +1,6 @@
 # Dashboard Requirements
 
-Owner: Shaswath
+Owner: Jaswanth
 
 ## Purpose
 
@@ -11,7 +11,6 @@ The dashboard should answer:
 - How serious is the current drop-off problem?
 - Which behaviours are most linked to drop-off?
 - Which learners need attention first?
-- Can the displayed data be trusted?
 
 ## Pages
 
@@ -62,19 +61,6 @@ Input data:
 
 - `data/processed/learner_features.csv`
 
-### Data Quality
-
-Required components:
-
-- Validation status
-- Failed row counts
-- Last checked timestamp
-- Human-readable validation message
-
-Input data:
-
-- `data/processed/data_quality_results.csv`
-
 ## MVP Acceptance Criteria
 
 - Dashboard opens with `streamlit run src/dashboard/app.py`.
@@ -88,9 +74,8 @@ Input data:
 From Monesh:
 
 - clean SQLite database or aggregate CSV
-- data quality result output
 
-From Jaswanth:
+From Shaswath:
 
 - learner feature output
 - behaviour driver ranking output

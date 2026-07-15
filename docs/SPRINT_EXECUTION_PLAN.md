@@ -35,7 +35,7 @@ First PR ideas:
 - Add schema draft and data contracts.
 - Add raw data profiling script skeleton.
 
-### Jaswanth: Data Analyst
+### Shaswath: Data Analyst
 
 Own by end of Week 1:
 
@@ -49,7 +49,7 @@ First PR ideas:
 - Add label logic document.
 - Add feature engineering plan or notebook scaffold.
 
-### Shaswath: Dashboard and Automation
+### Jaswanth: Dashboard and Automation
 
 Own by end of Week 1:
 
@@ -77,13 +77,13 @@ First PR ideas:
 - Build ingestion flow for raw CSV files.
 - Add validation for required columns and duplicate keys.
 
-### Jaswanth
+### Shaswath
 
 - Implement label generation on top of clean data.
 - Implement first version of feature generation.
 - Validate feature output grain: one row per learner-course.
 
-### Shaswath
+### Jaswanth
 
 - Create Streamlit app shell with navigation.
 - Connect dashboard to placeholder or sample processed outputs.
@@ -125,11 +125,11 @@ Review focus:
 
 - Do aggregate outputs have correct grain?
 - Are date calculations consistent?
-- Can Jaswanth use the outputs directly?
+- Can Shaswath use the outputs directly?
 
 ### PR C: Labels and Feature Engineering
 
-Owner: Jaswanth
+Owner: Shaswath
 
 Includes:
 
@@ -145,7 +145,7 @@ Review focus:
 
 ### PR D: Behaviour Driver Analysis
 
-Owner: Jaswanth
+Owner: Shaswath
 
 Includes:
 
@@ -162,7 +162,7 @@ Review focus:
 
 ### PR E: Dashboard MVP
 
-Owner: Shaswath
+Owner: Jaswanth
 
 Includes:
 
@@ -179,7 +179,7 @@ Review focus:
 
 ### PR F: Automation and Documentation
 
-Owner: Shaswath
+Owner: Jaswanth
 
 Includes:
 
@@ -210,7 +210,7 @@ Blocker:
 
 - Need final raw CSV column names before locking schema.
 
-### Jaswanth
+### Shaswath
 
 Yesterday:
 
@@ -224,7 +224,7 @@ Blocker:
 
 - Need latest activity date and course duration fields to set inactivity threshold.
 
-### Shaswath
+### Jaswanth
 
 Yesterday:
 
@@ -236,7 +236,7 @@ Today:
 
 Blocker:
 
-- Need feature output schema from Jaswanth before final table wiring.
+- Need feature output schema from Shaswath before final table wiring.
 
 ## Showcase Storyline
 
@@ -260,7 +260,7 @@ Bring:
 - Data quality check examples.
 - Example of a bad row and how the pipeline handles it.
 
-### Jaswanth
+### Shaswath
 
 Bring:
 
@@ -269,7 +269,7 @@ Bring:
 - Top three behaviour findings.
 - Model or scoring method explanation.
 
-### Shaswath
+### Jaswanth
 
 Bring:
 
