@@ -1,6 +1,6 @@
 # Feature Dictionary
 
-Owner: Jaswanth
+Owner: Shaswath
 
 ## Purpose
 

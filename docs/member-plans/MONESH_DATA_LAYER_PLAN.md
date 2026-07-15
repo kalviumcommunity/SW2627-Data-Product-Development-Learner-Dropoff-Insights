@@ -81,11 +81,11 @@ Write SQL queries that calculate:
 Expected output:
 
 - SQL files under `src/database/queries/`.
-- Aggregate table usable by Jaswanth's feature engineering.
+- Aggregate table usable by Shaswath's feature engineering.
 
 ## Handoff Contracts
 
-### To Jaswanth
+### To Shaswath
 
 Provide a learner-course aggregate table with one row per learner-course pair.
 
@@ -104,7 +104,7 @@ Required fields:
 - average_quiz_score
 - latest_quiz_score
 
-### To Shaswath
+### To Jaswanth
 
 Provide stable tables or views for dashboard use:
 
@@ -146,8 +146,8 @@ This PR includes:
 - Raw data can be loaded without manual notebook work.
 - SQLite tables have documented grain and keys.
 - Invalid records are detected and reported.
-- Jaswanth can build features from the aggregate output.
-- Shaswath can display data quality status in the dashboard.
+- Shaswath can build features from the aggregate output.
+- Jaswanth can use validation outputs for CI checks and documentation.
 
 ## Viva Preparation
 

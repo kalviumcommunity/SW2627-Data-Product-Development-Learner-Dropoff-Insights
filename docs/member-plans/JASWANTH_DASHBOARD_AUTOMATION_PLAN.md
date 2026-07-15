@@ -1,8 +1,8 @@
-# Shaswath - Dashboard and Automation Plan
+# Jaswanth - Dashboard and Automation Plan
 
 ## Role
 
-Shaswath owns the user-facing dashboard, GitHub Actions automation, and project documentation for Learner Drop-off Insights.
+Jaswanth owns the user-facing dashboard, GitHub Actions automation, and project documentation for Learner Drop-off Insights.
 
 Primary responsibility:
 
@@ -21,7 +21,6 @@ Build dashboard pages:
 - Overview
 - Behaviour Drivers
 - Learner Risk List
-- Data Quality
 
 Expected output:
 
@@ -58,7 +57,7 @@ Show:
 
 Expected output:
 
-- Visuals based on Jaswanth's driver ranking and feature outputs.
+- Visuals based on Shaswath's driver ranking and feature outputs.
 - Plain labels that stakeholders can understand.
 
 ### 4. Learner Risk List
@@ -80,7 +79,7 @@ Expected output:
 - Filter by course, cohort, risk bucket, and reason.
 - High-risk learners visually highlighted.
 
-### 5. Data Quality and Automation
+### 5. Automation
 
 Set up:
 
@@ -91,9 +90,8 @@ Set up:
 
 Expected output:
 
-- `.github/workflows/data-quality.yml`
+- `.github/workflows/ci.yml`
 - Test or validation command documented in README.
-- Dashboard data quality page connected to validation output.
 
 ## Handoff Contracts
 
@@ -103,10 +101,9 @@ Needs:
 
 - SQLite database path.
 - Overview KPI query or table.
-- Data quality check output.
 - Stable table names.
 
-### From Jaswanth
+### From Shaswath
 
 Needs:
 
@@ -120,7 +117,7 @@ Needs:
 Branch name suggestion:
 
 ```text
-shaswath/dashboard-automation-plan
+jaswanth/dashboard-automation-plan
 ```
 
 PR title:
@@ -131,10 +128,10 @@ Add dashboard and automation plan for learner drop-off product
 
 This PR includes:
 
-- Shaswath's dashboard responsibilities.
+- Jaswanth's dashboard responsibilities.
 - Planned dashboard screens.
 - Automation responsibilities.
-- Data contracts needed from Monesh and Jaswanth.
+- Data contracts needed from Monesh and Shaswath.
 
 ## Future Implementation PRs
 
@@ -156,7 +153,7 @@ This PR includes:
 
 ## Viva Preparation
 
-Shaswath should be ready to explain:
+Jaswanth should be ready to explain:
 
 - How each dashboard page supports the stakeholder.
 - Which data output powers each chart or table.
@@ -168,7 +165,7 @@ Shaswath should be ready to explain:
 ## Current Open Questions
 
 1. Should the final dashboard use Streamlit only or include a static mock in docs?
-2. What exact output file names will Monesh and Jaswanth produce?
+2. What exact output file names will Monesh and Shaswath produce?
 3. Which filters are available from the raw data: course, cohort, date range, or status?
 4. Should high-risk learners be exportable as CSV?
 5. Where should dashboard screenshots be stored for final documentation?

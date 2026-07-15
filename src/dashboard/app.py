@@ -1,6 +1,6 @@
 """Streamlit dashboard scaffold for Learner Drop-off Insights.
 
-Owner: Shaswath
+Owner: Jaswanth
 """
 
 from __future__ import annotations
@@ -14,7 +14,6 @@ import streamlit as st
 DATA_DIR = Path("data/processed")
 FEATURES_PATH = DATA_DIR / "learner_features.csv"
 DRIVERS_PATH = DATA_DIR / "behaviour_driver_rankings.csv"
-QUALITY_PATH = DATA_DIR / "data_quality_results.csv"
 
 
 def load_csv(path: Path) -> pd.DataFrame:
@@ -100,17 +99,6 @@ def learner_risk_list(features: pd.DataFrame) -> None:
     st.dataframe(sorted_features[available_columns], use_container_width=True)
 
 
-def data_quality(quality: pd.DataFrame) -> None:
-    st.header("Data Quality")
-    st.caption("Pipeline validation status and known data issues.")
-
-    if quality.empty:
-        st.info("Waiting for data quality results from the data layer.")
-        return
-
-    st.dataframe(quality, use_container_width=True)
-
-
 def main() -> None:
     st.set_page_config(
         page_title="Learner Drop-off Insights",
@@ -121,17 +109,14 @@ def main() -> None:
 
     features = load_csv(FEATURES_PATH)
     drivers = load_csv(DRIVERS_PATH)
-    quality = load_csv(QUALITY_PATH)
 
-    tabs = st.tabs(["Overview", "Behaviour Drivers", "Learner Risk List", "Data Quality"])
+    tabs = st.tabs(["Overview", "Behaviour Drivers", "Learner Risk List"])
     with tabs[0]:
         overview(features)
     with tabs[1]:
         behaviour_drivers(drivers)
     with tabs[2]:
         learner_risk_list(features)
-    with tabs[3]:
-        data_quality(quality)
 
 
 if __name__ == "__main__":

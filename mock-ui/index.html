@@ -21,14 +21,13 @@
           <a class="active" href="#overview">Overview</a>
           <a href="#drivers">Behaviour Drivers</a>
           <a href="#risk-list">Learner Risk List</a>
-          <a href="#quality">Data Quality</a>
         </nav>
 
         <div class="owner-box">
           <h2>Contribution Lanes</h2>
           <p><strong>Monesh</strong><br>Data Engineer: SQL data layer and validation</p>
-          <p><strong>Jaswanth</strong><br>Data Analyst: labels, features, and findings</p>
-          <p><strong>Shaswath</strong><br>Dashboard Owner: dashboard, CI, and docs</p>
+          <p><strong>Shaswath</strong><br>Data Analyst: labels, features, and findings</p>
+          <p><strong>Jaswanth</strong><br>Dashboard Owner: dashboard, CI, and docs</p>
         </div>
       </aside>
 
@@ -115,7 +114,7 @@
             <article class="panel">
               <div class="panel-heading">
                 <h4>Completion versus drop-off trend</h4>
-                <span>Monesh + Shaswath</span>
+                <span>Monesh + Jaswanth</span>
               </div>
               <div class="trend-chart" aria-label="Completion versus drop-off trend mock chart">
                 <div class="trend-row">
@@ -144,7 +143,7 @@
             <article class="panel">
               <div class="panel-heading">
                 <h4>Top predictive behaviours</h4>
-                <span>Jaswanth + Shaswath</span>
+                <span>Shaswath + Jaswanth</span>
               </div>
               <ol class="driver-list">
                 <li>
@@ -185,7 +184,7 @@
             <article class="panel">
               <div class="panel-heading">
                 <h4>Driver strength</h4>
-                <span>Jaswanth owns analysis</span>
+                <span>Shaswath owns analysis</span>
               </div>
               <div class="horizontal-bars">
                 <div class="hbar-row">
@@ -263,7 +262,7 @@
           <article class="panel">
             <div class="panel-heading">
               <h4>Highest-risk learners</h4>
-              <span>Jaswanth risk logic, Shaswath table</span>
+              <span>Shaswath risk logic, Jaswanth table</span>
             </div>
             <table>
               <thead>
@@ -319,65 +318,6 @@
           </article>
         </section>
 
-        <section id="quality" class="section">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">Data Quality</p>
-              <h3>Can we trust this dashboard?</h3>
-            </div>
-          </div>
-
-          <div class="content-grid three-col">
-            <article class="quality-card pass">
-              <span>Required columns</span>
-              <strong>Passed</strong>
-              <p>All expected source fields found.</p>
-            </article>
-            <article class="quality-card warn">
-              <span>Missing quiz scores</span>
-              <strong>Warning</strong>
-              <p>2.4% of quiz rows need handling.</p>
-            </article>
-            <article class="quality-card pass">
-              <span>Duplicate enrollments</span>
-              <strong>Passed</strong>
-              <p>0 duplicate learner-course keys.</p>
-            </article>
-          </div>
-
-          <article class="panel">
-            <div class="panel-heading">
-              <h4>Pipeline ownership</h4>
-              <span>Monesh + Shaswath</span>
-            </div>
-            <div class="pipeline">
-              <div>
-                <strong>Raw CSV</strong>
-                <span>Source files</span>
-              </div>
-              <div>
-                <strong>SQLite</strong>
-                <span>Clean tables</span>
-              </div>
-              <div>
-                <strong>Pandas</strong>
-                <span>Features and labels</span>
-              </div>
-              <div>
-                <strong>Analysis</strong>
-                <span>Drivers and risk</span>
-              </div>
-              <div>
-                <strong>Streamlit</strong>
-                <span>Dashboard</span>
-              </div>
-              <div>
-                <strong>GitHub Actions</strong>
-                <span>Validation on PR</span>
-              </div>
-            </div>
-          </article>
-        </section>
       </main>
     </div>
   </body>
