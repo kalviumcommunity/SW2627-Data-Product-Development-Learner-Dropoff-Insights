@@ -6,7 +6,11 @@ Owner: Monesh
 
 This document records the expected raw data files, their grain, and how each file will map into the SQLite data layer.
 
-The real dataset still needs to be inspected before the schema is finalized. Until then, this inventory defines the contract the ingestion pipeline will validate.
+## Dataset Status
+
+The real dataset has not been received or inspected yet. The files and columns below are the expected ingestion contract for the first pipeline version, not confirmed source data.
+
+The schema and loader should be revised after the actual CSV files are available and profiled.
 
 ## Expected Raw Files
 
