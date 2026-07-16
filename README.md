@@ -81,6 +81,27 @@ Evidence for viva:
 - [Sprint Execution Plan](docs/SPRINT_EXECUTION_PLAN.md)
 - [Static Mock UI](mock-ui/index.html)
 
+## Run The Dashboard Locally
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start Streamlit:
+
+```bash
+streamlit run src/dashboard/app.py
+```
+
+Expected dashboard inputs:
+
+- `data/processed/learner_features.csv`
+- `data/processed/behaviour_driver_rankings.csv`
+
+If these files are not generated yet, the dashboard opens with waiting states instead of crashing.
+
 ## Suggested Repository Structure
 
 ```text
