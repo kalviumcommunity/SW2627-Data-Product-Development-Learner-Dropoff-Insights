@@ -102,6 +102,17 @@ Expected dashboard inputs:
 
 If these files are not generated yet, the dashboard opens with waiting states instead of crashing.
 
+## Validation Commands
+
+Run the same lightweight checks used by CI:
+
+```bash
+python -m compileall src
+python -m unittest discover -s tests -p "test_*.py"
+```
+
+The test suite includes feature-output checks and dashboard helper checks against the sample learner aggregate fixture.
+
 ## Suggested Repository Structure
 
 ```text
