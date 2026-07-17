@@ -9,8 +9,12 @@ from src.dashboard.app import (
     RISK_BUCKET_ORDER,
     STATUS_ORDER,
     build_interim_feature_comparison,
+    driver_details_table,
+    driver_direction_counts,
+    feature_label,
     metric_value,
     ordered_value_counts,
+    prepare_driver_rankings,
     risk_table,
     sorted_options,
 )
@@ -87,6 +91,60 @@ class TestDashboardHelpers(unittest.TestCase):
             list(risk_table(missing_columns).columns),
             ["learner_id", "course_id", "risk_score"],
         )
+
+    def test_driver_helpers_prepare_stakeholder_ready_tables(self) -> None:
+        drivers = pd.DataFrame(
+            [
+                {
+                    "feature_name": "active_days",
+                    "driver_direction": "completion",
+                    "strength_score": 0.78,
+                    "completed_group_value": 12.5,
+                    "dropoff_group_value": 3.2,
+                    "interpretation": "More active days support completion.",
+                },
+                {
+                    "feature_name": "days_since_last_activity",
+                    "driver_direction": "dropoff",
+                    "strength_score": 0.85,
+                    "completed_group_value": 2.1,
+                    "dropoff_group_value": 25.4,
+                    "interpretation": "Long inactivity predicts drop-off.",
+                },
+            ]
+        )
+
+        prepared = prepare_driver_rankings(drivers)
+        direction_counts = driver_direction_counts(prepared)
+        details = driver_details_table(prepared)
+
+        self.assertEqual(
+            feature_label("days_since_last_activity"),
+            "Days Since Last Activity",
+        )
+        self.assertEqual(prepared.iloc[0]["feature_name"], "days_since_last_activity")
+        self.assertEqual(list(direction_counts.index), ["dropoff", "completion"])
+        self.assertEqual(direction_counts.loc["dropoff"], 1)
+        self.assertEqual(
+            list(details.columns),
+            [
+                "Feature",
+                "Direction",
+                "Strength",
+                "Completed avg",
+                "Silent drop-off avg",
+                "Interpretation",
+            ],
+        )
+        self.assertEqual(details.iloc[0]["Feature"], "Days Since Last Activity")
+
+    def test_driver_helpers_return_empty_for_incomplete_driver_file(self) -> None:
+        incomplete_drivers = pd.DataFrame(
+            [{"feature_name": "active_days", "strength_score": 0.78}]
+        )
+
+        self.assertTrue(prepare_driver_rankings(incomplete_drivers).empty)
+        self.assertTrue(driver_details_table(incomplete_drivers).empty)
 
 
 if __name__ == "__main__":
