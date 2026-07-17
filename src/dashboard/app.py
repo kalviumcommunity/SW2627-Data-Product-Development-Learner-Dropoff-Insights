@@ -17,6 +17,15 @@ DRIVERS_PATH = DATA_DIR / "behaviour_driver_rankings.csv"
 
 STATUS_ORDER = ["completed", "active", "at_risk", "silent_dropoff", "unstarted"]
 RISK_BUCKET_ORDER = ["high", "medium", "low"]
+DRIVER_DIRECTION_ORDER = ["dropoff", "completion"]
+DRIVER_REQUIRED_COLUMNS = {
+    "feature_name",
+    "driver_direction",
+    "strength_score",
+    "completed_group_value",
+    "dropoff_group_value",
+    "interpretation",
+}
 
 
 @st.cache_data(show_spinner=False)
@@ -102,6 +111,64 @@ def ordered_value_counts(
     ordered_values = [value for value in preferred_order if value in counts.index]
     remaining_values = sorted(value for value in counts.index if value not in ordered_values)
     return counts.reindex(ordered_values + remaining_values)
+
+
+def feature_label(feature_name: object) -> str:
+    return str(feature_name).replace("_", " ").title()
+
+
+def prepare_driver_rankings(drivers: pd.DataFrame) -> pd.DataFrame:
+    if drivers.empty or not DRIVER_REQUIRED_COLUMNS.issubset(drivers.columns):
+        return pd.DataFrame()
+
+    prepared = drivers.copy()
+    prepared["strength_score"] = pd.to_numeric(
+        prepared["strength_score"],
+        errors="coerce",
+    ).fillna(0)
+    prepared["completed_group_value"] = pd.to_numeric(
+        prepared["completed_group_value"],
+        errors="coerce",
+    )
+    prepared["dropoff_group_value"] = pd.to_numeric(
+        prepared["dropoff_group_value"],
+        errors="coerce",
+    )
+    prepared["feature_label"] = prepared["feature_name"].map(feature_label)
+    return prepared.sort_values("strength_score", ascending=False)
+
+
+def driver_direction_counts(drivers: pd.DataFrame) -> pd.Series:
+    if drivers.empty or "driver_direction" not in drivers.columns:
+        return pd.Series(dtype=int)
+    return ordered_value_counts(drivers, "driver_direction", DRIVER_DIRECTION_ORDER)
+
+
+def driver_details_table(drivers: pd.DataFrame) -> pd.DataFrame:
+    prepared = prepare_driver_rankings(drivers)
+    if prepared.empty:
+        return pd.DataFrame()
+
+    table = prepared[
+        [
+            "feature_label",
+            "driver_direction",
+            "strength_score",
+            "completed_group_value",
+            "dropoff_group_value",
+            "interpretation",
+        ]
+    ].copy()
+    return table.rename(
+        columns={
+            "feature_label": "Feature",
+            "driver_direction": "Direction",
+            "strength_score": "Strength",
+            "completed_group_value": "Completed avg",
+            "dropoff_group_value": "Silent drop-off avg",
+            "interpretation": "Interpretation",
+        }
+    )
 
 
 def risk_table(features: pd.DataFrame) -> pd.DataFrame:
@@ -218,13 +285,36 @@ def behaviour_drivers(drivers: pd.DataFrame, features: pd.DataFrame) -> None:
     st.caption("Behaviours most associated with completion or silent drop-off.")
 
     if not drivers.empty:
-        if {"feature_name", "strength_score"}.issubset(drivers.columns):
-            st.subheader("Ranked behaviour drivers")
-            chart_data = drivers.set_index("feature_name")["strength_score"]
+        prepared_drivers = prepare_driver_rankings(drivers)
+        if prepared_drivers.empty:
+            st.warning("Behaviour driver file is present, but expected columns are missing.")
+            st.dataframe(drivers, use_container_width=True, hide_index=True)
+            return
+
+        top_driver = prepared_drivers.iloc[0]
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Ranked behaviours", len(prepared_drivers))
+        col2.metric("Top driver", top_driver["feature_label"])
+        col3.metric("Top strength", f"{top_driver['strength_score']:.2f}")
+
+        st.info(str(top_driver["interpretation"]))
+
+        chart_col1, chart_col2 = st.columns(2)
+        with chart_col1:
+            st.subheader("Ranked driver strength")
+            chart_data = prepared_drivers.set_index("feature_label")["strength_score"]
             st.bar_chart(chart_data)
 
-        st.subheader("Driver details")
-        st.dataframe(drivers, use_container_width=True, hide_index=True)
+        with chart_col2:
+            st.subheader("Driver direction mix")
+            st.bar_chart(driver_direction_counts(prepared_drivers))
+
+        st.subheader("Completed vs silent drop-off comparison")
+        st.dataframe(
+            driver_details_table(prepared_drivers),
+            use_container_width=True,
+            hide_index=True,
+        )
         return
 
     st.info("Waiting for final behaviour driver rankings from the analysis lane.")

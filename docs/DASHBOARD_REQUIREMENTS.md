@@ -35,10 +35,21 @@ Required components:
 - Ranked behaviour driver chart
 - Completed versus silent drop-off comparison
 - Plain-language interpretation
+- Top driver summary
+- Driver direction mix: completion predictor versus drop-off predictor
 
 Input data:
 
 - `data/processed/behaviour_driver_rankings.csv`
+
+Expected columns:
+
+- `feature_name`
+- `driver_direction`
+- `strength_score`
+- `completed_group_value`
+- `dropoff_group_value`
+- `interpretation`
 
 Fallback:
 
