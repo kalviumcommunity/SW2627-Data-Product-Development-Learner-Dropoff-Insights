@@ -114,3 +114,14 @@ The first data validation script should support:
 5. Quiz score range checks.
 
 This is enough to protect the first analysis and dashboard iteration.
+
+## Implementation Command
+
+After raw files are loaded into SQLite, run:
+
+```bash
+python src/ingestion/validate_data_quality.py
+```
+
+The script writes one row per validation result into `data_quality_results`.
+Blocking failures return a non-zero exit code so CI or manual runs can stop before analysis uses bad data.
