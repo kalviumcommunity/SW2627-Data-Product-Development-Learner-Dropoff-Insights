@@ -102,6 +102,16 @@ Expected dashboard inputs:
 
 If these files are not generated yet, the dashboard opens with waiting states instead of crashing.
 
+## Run The Data Pipeline
+
+After placing raw CSV files in `data/raw/`, run the Monesh-owned data pipeline:
+
+```bash
+python src/ingestion/run_data_pipeline.py
+```
+
+This creates the SQLite database, records data quality results, and exports `data/processed/learner_course_aggregates.csv`.
+
 ## Validation Commands
 
 Run the same lightweight checks used by CI:

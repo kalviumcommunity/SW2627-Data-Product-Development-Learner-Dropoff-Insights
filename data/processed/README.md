@@ -19,3 +19,17 @@ After loading raw CSV files into SQLite, generate the analysis handoff CSV with:
 ```bash
 python src/database/build_aggregates.py
 ```
+
+## Full Data Pipeline Command
+
+To run ingestion, data quality validation, and aggregate export together:
+
+```bash
+python src/ingestion/run_data_pipeline.py
+```
+
+Use strict mode when the real raw dataset is available and all expected files must be present:
+
+```bash
+python src/ingestion/run_data_pipeline.py --strict-raw
+```
