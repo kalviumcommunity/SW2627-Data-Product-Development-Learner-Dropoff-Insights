@@ -2,6 +2,19 @@
 
 Owner: Shaswath
 
+Methodology:
+    Computes Point-Biserial / Pearson correlation (r) between numerical features
+    and a binary completion flag (completed=1, silent_dropoff=0).
+
+Metrics:
+    - strength_score: Absolute correlation coefficient |r| in range [0, 1].
+    - driver_direction: 'completion' if r >= 0 else 'dropoff'.
+    - completed_group_value: Mean value for completed group.
+    - dropoff_group_value: Mean value for silent_dropoff group.
+
+Note:
+    Features represent statistical associations and predictive signals, not causal mechanisms.
+
 Input:
     data/processed/learner_features.csv
 
@@ -45,19 +58,19 @@ INTERPRETATIONS = {
         "dropoff": "Shorter sessions are associated with drop-off risk.",
     },
     "average_quiz_score": {
-        "completion": "Higher average quiz scores are a strong indicator of completion.",
+        "completion": "Higher average quiz scores are associated with course completion.",
         "dropoff": "Lower quiz scores correspond to a higher chance of drop-off.",
     },
     "latest_quiz_score": {
-        "completion": "High scores on the latest quiz attempts strongly predict course completion.",
-        "dropoff": "Declining or low scores on the latest quiz attempts predict drop-offs.",
+        "completion": "High scores on the latest quiz attempts strongly correlate with course completion.",
+        "dropoff": "Declining or low scores on the latest quiz attempts correlate with drop-offs.",
     },
     "days_since_last_activity": {
         "completion": "Lower inactivity gaps are associated with completion.",
-        "dropoff": "Longer inactivity gaps are the strongest predictor of silent drop-offs.",
+        "dropoff": "Longer inactivity gaps are the strongest behavioural signal associated with silent drop-offs.",
     },
     "quiz_attempt_count": {
-        "completion": "Learners who attempt more quizzes are more likely to complete the course.",
+        "completion": "Learners who attempt more quizzes correlate with higher course completion.",
         "dropoff": "Fewer quiz attempts are associated with drop-off risk.",
     },
 }
