@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -117,7 +118,10 @@ def create_database(database_path: Path, schema_path: Path) -> None:
     if database_path.exists():
         database_path.unlink()
 
-    with sqlite3.connect(database_path) as connection:
+    # sqlite3.Connection's context manager commits or rolls back, but does not
+    # close the connection. ``closing`` is required so Windows can release the
+    # database file immediately after the operation.
+    with closing(sqlite3.connect(database_path)) as connection, connection:
         connection.executescript(schema_path.read_text(encoding="utf-8"))
 
 
@@ -142,7 +146,7 @@ def load_available_files(raw_dir: Path, database_path: Path) -> tuple[list[str],
     missing_files: list[str] = []
     loaded_tables: list[str] = []
 
-    with sqlite3.connect(database_path) as connection:
+    with closing(sqlite3.connect(database_path)) as connection, connection:
         for contract in RAW_FILE_CONTRACTS:
             csv_path = raw_dir / contract.filename
             if not csv_path.exists():
