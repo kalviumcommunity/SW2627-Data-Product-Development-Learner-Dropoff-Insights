@@ -138,6 +138,34 @@ def prepare_driver_rankings(drivers: pd.DataFrame) -> pd.DataFrame:
     return prepared.sort_values("strength_score", ascending=False)
 
 
+def filter_driver_rankings(
+    drivers: pd.DataFrame,
+    selected_directions: list[str] | None = None,
+    minimum_strength: float = 0.0,
+) -> pd.DataFrame:
+    """Prepare and filter driver rankings for dashboard controls."""
+    filtered = prepare_driver_rankings(drivers)
+    if filtered.empty:
+        return filtered
+
+    if selected_directions is not None:
+        filtered = filtered[
+            filtered["driver_direction"].isin(selected_directions)
+        ]
+
+    minimum_strength = max(0.0, min(float(minimum_strength), 1.0))
+    return filtered[filtered["strength_score"] >= minimum_strength]
+
+
+def driver_takeaway(driver: pd.Series) -> str:
+    """Create a concise stakeholder takeaway for a ranked behaviour."""
+    feature = feature_label(driver.get("feature_name", "behaviour"))
+    direction = str(driver.get("driver_direction", "association"))
+    strength = float(driver.get("strength_score", 0.0))
+    outcome = "course completion" if direction == "completion" else "silent drop-off"
+    return f"{feature} is associated with {outcome} (strength {strength:.2f})."
+
+
 def driver_direction_counts(drivers: pd.DataFrame) -> pd.Series:
     if drivers.empty or "driver_direction" not in drivers.columns:
         return pd.Series(dtype=int)
@@ -283,6 +311,10 @@ def overview(features: pd.DataFrame) -> None:
 def behaviour_drivers(drivers: pd.DataFrame, features: pd.DataFrame) -> None:
     st.header("Behaviour Drivers")
     st.caption("Behaviours most associated with completion or silent drop-off.")
+    st.warning(
+        "These rankings show statistical associations, not proven causes. "
+        "Use them as early-warning signals for learner support."
+    )
 
     if not drivers.empty:
         prepared_drivers = prepare_driver_rankings(drivers)
@@ -291,30 +323,72 @@ def behaviour_drivers(drivers: pd.DataFrame, features: pd.DataFrame) -> None:
             st.dataframe(drivers, use_container_width=True, hide_index=True)
             return
 
-        top_driver = prepared_drivers.iloc[0]
+        control_col1, control_col2 = st.columns(2)
+        with control_col1:
+            direction_options = sorted_options(
+                prepared_drivers,
+                "driver_direction",
+                DRIVER_DIRECTION_ORDER,
+            )
+            selected_directions = st.multiselect(
+                "Associated outcome",
+                direction_options,
+                default=direction_options,
+            )
+        with control_col2:
+            minimum_strength = st.slider(
+                "Minimum association strength",
+                min_value=0.0,
+                max_value=1.0,
+                value=0.0,
+                step=0.05,
+            )
+
+        filtered_drivers = filter_driver_rankings(
+            prepared_drivers,
+            selected_directions,
+            minimum_strength,
+        )
+        if filtered_drivers.empty:
+            st.info("No behaviour drivers match the selected filters.")
+            return
+
+        top_driver = filtered_drivers.iloc[0]
         col1, col2, col3 = st.columns(3)
-        col1.metric("Ranked behaviours", len(prepared_drivers))
+        col1.metric("Matching behaviours", len(filtered_drivers))
         col2.metric("Top driver", top_driver["feature_label"])
         col3.metric("Top strength", f"{top_driver['strength_score']:.2f}")
 
-        st.info(str(top_driver["interpretation"]))
+        st.info(driver_takeaway(top_driver))
+        st.caption(str(top_driver["interpretation"]))
 
         chart_col1, chart_col2 = st.columns(2)
         with chart_col1:
             st.subheader("Ranked driver strength")
-            chart_data = prepared_drivers.set_index("feature_label")["strength_score"]
+            chart_data = filtered_drivers.set_index("feature_label")["strength_score"]
             st.bar_chart(chart_data)
 
         with chart_col2:
             st.subheader("Driver direction mix")
-            st.bar_chart(driver_direction_counts(prepared_drivers))
+            st.bar_chart(driver_direction_counts(filtered_drivers))
 
         st.subheader("Completed vs silent drop-off comparison")
         st.dataframe(
-            driver_details_table(prepared_drivers),
+            driver_details_table(filtered_drivers),
             use_container_width=True,
             hide_index=True,
         )
+
+        with st.expander("How these rankings are calculated"):
+            st.write(
+                "Strength is the absolute Pearson correlation between each numeric "
+                "behaviour and the binary outcome (completed = 1, silent drop-off = 0). "
+                "Direction indicates which outcome is associated with higher values."
+            )
+            st.write(
+                "A high score supports prioritization and investigation; it does not "
+                "prove that changing the behaviour will cause course completion."
+            )
         return
 
     st.info("Waiting for final behaviour driver rankings from the analysis lane.")

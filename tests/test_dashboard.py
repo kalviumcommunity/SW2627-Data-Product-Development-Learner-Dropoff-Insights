@@ -11,7 +11,9 @@ from src.dashboard.app import (
     build_interim_feature_comparison,
     driver_details_table,
     driver_direction_counts,
+    driver_takeaway,
     feature_label,
+    filter_driver_rankings,
     metric_value,
     ordered_value_counts,
     prepare_driver_rankings,
@@ -145,6 +147,65 @@ class TestDashboardHelpers(unittest.TestCase):
 
         self.assertTrue(prepare_driver_rankings(incomplete_drivers).empty)
         self.assertTrue(driver_details_table(incomplete_drivers).empty)
+
+    def test_driver_filters_and_takeaway_support_dashboard_controls(self) -> None:
+        drivers = pd.DataFrame(
+            [
+                {
+                    "feature_name": "days_since_last_activity",
+                    "driver_direction": "dropoff",
+                    "strength_score": 0.85,
+                    "completed_group_value": 2.1,
+                    "dropoff_group_value": 25.4,
+                    "interpretation": "Long inactivity predicts drop-off.",
+                },
+                {
+                    "feature_name": "active_days",
+                    "driver_direction": "completion",
+                    "strength_score": 0.78,
+                    "completed_group_value": 12.5,
+                    "dropoff_group_value": 3.2,
+                    "interpretation": "More active days support completion.",
+                },
+                {
+                    "feature_name": "average_session_duration",
+                    "driver_direction": "completion",
+                    "strength_score": 0.40,
+                    "completed_group_value": 15.2,
+                    "dropoff_group_value": 8.4,
+                    "interpretation": "Longer sessions support completion.",
+                },
+            ]
+        )
+
+        filtered = filter_driver_rankings(
+            drivers,
+            selected_directions=["completion"],
+            minimum_strength=0.5,
+        )
+
+        self.assertEqual(list(filtered["feature_name"]), ["active_days"])
+        self.assertEqual(
+            driver_takeaway(filtered.iloc[0]),
+            "Active Days is associated with course completion (strength 0.78).",
+        )
+
+    def test_driver_filter_clamps_strength_to_valid_range(self) -> None:
+        drivers = pd.DataFrame(
+            [
+                {
+                    "feature_name": "active_days",
+                    "driver_direction": "completion",
+                    "strength_score": 0.78,
+                    "completed_group_value": 12.5,
+                    "dropoff_group_value": 3.2,
+                    "interpretation": "More active days support completion.",
+                }
+            ]
+        )
+
+        self.assertEqual(len(filter_driver_rankings(drivers, minimum_strength=-1)), 1)
+        self.assertEqual(len(filter_driver_rankings(drivers, minimum_strength=2)), 0)
 
 
 if __name__ == "__main__":

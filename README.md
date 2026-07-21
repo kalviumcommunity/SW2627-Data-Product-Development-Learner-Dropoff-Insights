@@ -102,6 +102,13 @@ Expected dashboard inputs:
 
 If these files are not generated yet, the dashboard opens with waiting states instead of crashing.
 
+Dashboard usage:
+
+- Use the global sidebar filters to narrow the learner population by course, cohort, status, risk bucket, or risk reason.
+- Open **Behaviour Drivers** to filter ranked signals by associated outcome and minimum correlation strength.
+- Treat driver rankings as early-warning associations, not proof that a behaviour causes completion or drop-off.
+- Open **Learner Risk List** to review the highest-priority learners and export the filtered intervention queue as CSV.
+
 ## Run The Data Pipeline
 
 After placing raw CSV files in `data/raw/`, run the Monesh-owned data pipeline:
