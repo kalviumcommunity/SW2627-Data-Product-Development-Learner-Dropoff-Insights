@@ -11,6 +11,8 @@ from src.dashboard.app import (
     build_interim_feature_comparison,
     driver_details_table,
     driver_direction_counts,
+    driver_analysis_source,
+    driver_sample_label,
     driver_takeaway,
     feature_label,
     filter_driver_rankings,
@@ -206,6 +208,49 @@ class TestDashboardHelpers(unittest.TestCase):
 
         self.assertEqual(len(filter_driver_rankings(drivers, minimum_strength=-1)), 1)
         self.assertEqual(len(filter_driver_rankings(drivers, minimum_strength=2)), 0)
+
+    def test_driver_evidence_helpers_distinguish_observed_and_fallback_data(self) -> None:
+        observed = pd.DataFrame(
+            [
+                {
+                    "feature_name": "active_days",
+                    "driver_direction": "completion",
+                    "strength_score": 0.78,
+                    "completed_group_value": 12.5,
+                    "dropoff_group_value": 3.2,
+                    "completed_group_count": 20,
+                    "dropoff_group_count": 8,
+                    "analysis_source": "observed_data",
+                    "interpretation": "More active days support completion.",
+                }
+            ]
+        )
+        fallback = observed.assign(
+            completed_group_count=0,
+            dropoff_group_count=0,
+            analysis_source="fallback_example",
+        )
+
+        self.assertEqual(driver_analysis_source(observed), "observed_data")
+        self.assertEqual(driver_analysis_source(fallback), "fallback_example")
+        self.assertEqual(
+            driver_sample_label(observed.iloc[0]),
+            "20 completed / 8 drop-off",
+        )
+        self.assertEqual(driver_sample_label(pd.Series(dtype=object)), "Not reported")
+
+        details = driver_details_table(observed)
+        self.assertIn("Completed sample", details.columns)
+        self.assertIn("Silent drop-off sample", details.columns)
+        self.assertIn("Analysis source", details.columns)
+
+    def test_driver_analysis_source_handles_mixed_and_legacy_files(self) -> None:
+        mixed = pd.DataFrame(
+            {"analysis_source": ["observed_data", "fallback_example"]}
+        )
+
+        self.assertEqual(driver_analysis_source(mixed), "mixed")
+        self.assertEqual(driver_analysis_source(pd.DataFrame()), "legacy")
 
 
 if __name__ == "__main__":

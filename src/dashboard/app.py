@@ -166,6 +166,28 @@ def driver_takeaway(driver: pd.Series) -> str:
     return f"{feature} is associated with {outcome} (strength {strength:.2f})."
 
 
+def driver_analysis_source(drivers: pd.DataFrame) -> str:
+    """Summarize whether rankings are observed, fallback, mixed, or legacy."""
+    if drivers.empty or "analysis_source" not in drivers.columns:
+        return "legacy"
+
+    sources = set(drivers["analysis_source"].dropna().astype(str))
+    if sources == {"observed_data"}:
+        return "observed_data"
+    if sources == {"fallback_example"}:
+        return "fallback_example"
+    return "mixed"
+
+
+def driver_sample_label(driver: pd.Series) -> str:
+    """Format evidence counts for the selected top driver."""
+    completed = pd.to_numeric(driver.get("completed_group_count"), errors="coerce")
+    dropoff = pd.to_numeric(driver.get("dropoff_group_count"), errors="coerce")
+    if pd.isna(completed) or pd.isna(dropoff):
+        return "Not reported"
+    return f"{int(completed)} completed / {int(dropoff)} drop-off"
+
+
 def driver_direction_counts(drivers: pd.DataFrame) -> pd.Series:
     if drivers.empty or "driver_direction" not in drivers.columns:
         return pd.Series(dtype=int)
@@ -177,16 +199,24 @@ def driver_details_table(drivers: pd.DataFrame) -> pd.DataFrame:
     if prepared.empty:
         return pd.DataFrame()
 
-    table = prepared[
-        [
-            "feature_label",
-            "driver_direction",
-            "strength_score",
-            "completed_group_value",
-            "dropoff_group_value",
-            "interpretation",
+    detail_columns = [
+        "feature_label",
+        "driver_direction",
+        "strength_score",
+        "completed_group_value",
+        "dropoff_group_value",
+    ]
+    detail_columns.extend(
+        column
+        for column in [
+            "completed_group_count",
+            "dropoff_group_count",
+            "analysis_source",
         ]
-    ].copy()
+        if column in prepared.columns
+    )
+    detail_columns.append("interpretation")
+    table = prepared[detail_columns].copy()
     return table.rename(
         columns={
             "feature_label": "Feature",
@@ -194,6 +224,9 @@ def driver_details_table(drivers: pd.DataFrame) -> pd.DataFrame:
             "strength_score": "Strength",
             "completed_group_value": "Completed avg",
             "dropoff_group_value": "Silent drop-off avg",
+            "completed_group_count": "Completed sample",
+            "dropoff_group_count": "Silent drop-off sample",
+            "analysis_source": "Analysis source",
             "interpretation": "Interpretation",
         }
     )
@@ -323,6 +356,22 @@ def behaviour_drivers(drivers: pd.DataFrame, features: pd.DataFrame) -> None:
             st.dataframe(drivers, use_container_width=True, hide_index=True)
             return
 
+        analysis_source = driver_analysis_source(prepared_drivers)
+        if analysis_source == "fallback_example":
+            st.error(
+                "Illustrative fallback rankings are loaded. Use this view only to "
+                "preview the dashboard; do not report these values as findings."
+            )
+        elif analysis_source == "mixed":
+            st.warning(
+                "This file mixes observed and fallback rankings. Confirm the analysis "
+                "output before using it for learner decisions."
+            )
+        elif analysis_source == "legacy":
+            st.caption(
+                "This ranking file does not report analysis source or sample sizes."
+            )
+
         control_col1, control_col2 = st.columns(2)
         with control_col1:
             direction_options = sorted_options(
@@ -354,10 +403,11 @@ def behaviour_drivers(drivers: pd.DataFrame, features: pd.DataFrame) -> None:
             return
 
         top_driver = filtered_drivers.iloc[0]
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
         col1.metric("Matching behaviours", len(filtered_drivers))
         col2.metric("Top driver", top_driver["feature_label"])
         col3.metric("Top strength", f"{top_driver['strength_score']:.2f}")
+        col4.metric("Evidence", driver_sample_label(top_driver))
 
         st.info(driver_takeaway(top_driver))
         st.caption(str(top_driver["interpretation"]))
