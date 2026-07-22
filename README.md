@@ -107,6 +107,7 @@ Dashboard usage:
 - Use the global sidebar filters to narrow the learner population by course, cohort, status, risk bucket, or risk reason.
 - Open **Behaviour Drivers** to filter ranked signals by associated outcome and minimum correlation strength.
 - Treat driver rankings as early-warning associations, not proof that a behaviour causes completion or drop-off.
+- Check the analysis-source notice and evidence counts before reporting a ranking; fallback examples are dashboard previews, not findings.
 - Open **Learner Risk List** to review the highest-priority learners and export the filtered intervention queue as CSV.
 
 ## Run The Data Pipeline
