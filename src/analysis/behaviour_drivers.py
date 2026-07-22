@@ -44,6 +44,8 @@ CANDIDATE_FEATURES = [
     "quiz_attempt_count",
 ]
 
+MIN_GROUP_SIZE = 2
+
 INTERPRETATIONS = {
     "active_days": {
         "completion": "Learners who complete courses log in and participate on more unique days.",
@@ -55,15 +57,15 @@ INTERPRETATIONS = {
     },
     "average_session_duration": {
         "completion": "Longer session durations are associated with higher completion rates.",
-        "dropoff": "Shorter sessions are associated with drop-off risk.",
+        "dropoff": "Longer session durations are associated with silent drop-off in this dataset.",
     },
     "average_quiz_score": {
         "completion": "Higher average quiz scores are associated with course completion.",
-        "dropoff": "Lower quiz scores correspond to a higher chance of drop-off.",
+        "dropoff": "Higher average quiz scores are associated with silent drop-off in this dataset.",
     },
     "latest_quiz_score": {
         "completion": "High scores on the latest quiz attempts strongly correlate with course completion.",
-        "dropoff": "Declining or low scores on the latest quiz attempts correlate with drop-offs.",
+        "dropoff": "Higher latest quiz scores are associated with silent drop-off in this dataset.",
     },
     "days_since_last_activity": {
         "completion": "Lower inactivity gaps are associated with completion.",
@@ -71,7 +73,7 @@ INTERPRETATIONS = {
     },
     "quiz_attempt_count": {
         "completion": "Learners who attempt more quizzes correlate with higher course completion.",
-        "dropoff": "Fewer quiz attempts are associated with drop-off risk.",
+        "dropoff": "More quiz attempts are associated with silent drop-off in this dataset.",
     },
 }
 
@@ -149,6 +151,9 @@ def load_input_data(input_path: Path) -> pd.DataFrame:
 def build_fallback_rankings(output_path: Path) -> None:
     print("Generating fallback rankings due to insufficient data...")
     df = pd.DataFrame(FALLBACK_RANKINGS)
+    df["completed_group_count"] = 0
+    df["dropoff_group_count"] = 0
+    df["analysis_source"] = "fallback_example"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(output_path, index=False)
     print(f"Wrote fallback rankings to {output_path}")
@@ -185,6 +190,11 @@ def analyze_drivers(features_df: pd.DataFrame) -> pd.DataFrame:
         feat_values = numeric_series[valid_mask]
         flags = target_groups.loc[valid_mask, "completed_flag"]
 
+        completed_count = int((flags == 1).sum())
+        dropoff_count = int((flags == 0).sum())
+        if completed_count < MIN_GROUP_SIZE or dropoff_count < MIN_GROUP_SIZE:
+            continue
+
         # If variance is 0, correlation coefficient is undefined
         if feat_values.std() == 0 or flags.std() == 0:
             correlation = 0.0
@@ -214,6 +224,9 @@ def analyze_drivers(features_df: pd.DataFrame) -> pd.DataFrame:
             "strength_score": float(np.round(strength, 4)),
             "completed_group_value": float(np.round(completed_val, 2)),
             "dropoff_group_value": float(np.round(dropoff_val, 2)),
+            "completed_group_count": completed_count,
+            "dropoff_group_count": dropoff_count,
+            "analysis_source": "observed_data",
             "interpretation": interpretation,
         })
 

@@ -60,6 +60,9 @@ class TestBehaviourDrivers(unittest.TestCase):
             "strength_score",
             "completed_group_value",
             "dropoff_group_value",
+            "completed_group_count",
+            "dropoff_group_count",
+            "analysis_source",
             "interpretation",
         ]
         for col in expected_columns:
@@ -75,6 +78,9 @@ class TestBehaviourDrivers(unittest.TestCase):
         self.assertGreater(active_days_row["strength_score"], 0.8)  # Should correlate strongly
         self.assertEqual(active_days_row["completed_group_value"], 11.0)
         self.assertEqual(active_days_row["dropoff_group_value"], 2.5)
+        self.assertEqual(active_days_row["completed_group_count"], 2)
+        self.assertEqual(active_days_row["dropoff_group_count"], 2)
+        self.assertEqual(active_days_row["analysis_source"], "observed_data")
 
         # Check direction of days_since_last_activity (should be dropoff since silent_dropoff has higher value)
         inactivity_row = drivers_df[
@@ -130,6 +136,20 @@ class TestBehaviourDrivers(unittest.TestCase):
             self.assertEqual(len(fallback_df), 7)
             self.assertEqual(fallback_df.iloc[0]["feature_name"], "days_since_last_activity")
             self.assertEqual(fallback_df.iloc[0]["driver_direction"], "dropoff")
+            self.assertEqual(fallback_df.iloc[0]["analysis_source"], "fallback_example")
+            self.assertEqual(fallback_df.iloc[0]["completed_group_count"], 0)
+
+    def test_feature_requires_two_valid_rows_per_outcome_group(self) -> None:
+        features = pd.DataFrame(
+            [
+                {"learner_status": "completed", "active_days": 10},
+                {"learner_status": "completed", "active_days": None},
+                {"learner_status": "silent_dropoff", "active_days": 2},
+                {"learner_status": "silent_dropoff", "active_days": 3},
+            ]
+        )
+
+        self.assertTrue(analyze_drivers(features).empty)
 
 
 if __name__ == "__main__":

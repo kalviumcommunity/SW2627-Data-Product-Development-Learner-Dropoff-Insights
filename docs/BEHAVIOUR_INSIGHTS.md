@@ -47,9 +47,9 @@ Learners are filtered into two comparative groups:
 
 ---
 
-## 3. Top 5 Predictive Behaviour Drivers
+## 3. Illustrative Top 5 Behaviour Drivers
 
-Based on current feature analysis across active cohorts, the top 5 behaviors predicting completion vs. silent drop-off are:
+The values below are fallback examples used to demonstrate the expected output until sufficient learner data is processed. They are not observed findings and must be replaced by generated `observed_data` rankings before reporting results.
 
 ### 1. Inactivity Gap (`days_since_last_activity`)
 - **Direction**: `dropoff`
@@ -82,10 +82,12 @@ Based on current feature analysis across active cohorts, the top 5 behaviors pre
 
 The table below summarizes the output schema produced for the dashboard (`behaviour_driver_rankings.csv`):
 
-| feature_name | driver_direction | strength_score | completed_group_value | dropoff_group_value | interpretation |
-| --- | --- | --- | --- | --- | --- |
-| `days_since_last_activity` | `dropoff` | 0.85 | 2.1 days | 25.4 days | Longer inactivity gaps are the strongest behavioural signal associated with silent drop-offs. |
-| `active_days` | `completion` | 0.78 | 12.5 days | 3.2 days | Learners who complete courses log in and participate on more unique days. |
-| `latest_quiz_score` | `completion` | 0.65 | 82.4% | 45.2% | High scores on the latest quiz attempts strongly correlate with course completion. |
-| `total_sessions` | `completion` | 0.60 | 18.6 sessions | 5.1 sessions | Completers engage in a higher total number of sessions. |
-| `average_quiz_score` | `completion` | 0.55 | 78.9% | 48.3% | Higher average quiz scores are associated with course completion. |
+| feature_name | driver_direction | strength_score | completed_group_value | dropoff_group_value | completed_group_count | dropoff_group_count | analysis_source | interpretation |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `days_since_last_activity` | `dropoff` | 0.85 | 2.1 days | 25.4 days | 0 | 0 | `fallback_example` | Longer inactivity gaps are the strongest behavioural signal associated with silent drop-offs. |
+| `active_days` | `completion` | 0.78 | 12.5 days | 3.2 days | 0 | 0 | `fallback_example` | Learners who complete courses log in and participate on more unique days. |
+| `latest_quiz_score` | `completion` | 0.65 | 82.4% | 45.2% | 0 | 0 | `fallback_example` | High scores on the latest quiz attempts strongly correlate with course completion. |
+| `total_sessions` | `completion` | 0.60 | 18.6 sessions | 5.1 sessions | 0 | 0 | `fallback_example` | Completers engage in a higher total number of sessions. |
+| `average_quiz_score` | `completion` | 0.55 | 78.9% | 48.3% | 0 | 0 | `fallback_example` | Higher average quiz scores are associated with course completion. |
+
+Each observed ranking requires at least two valid learners in both comparison groups. The two count fields expose the evidence behind each feature. `analysis_source` is `observed_data` for calculated results and `fallback_example` for demonstration rows generated when the input is missing or insufficient; fallback rows must not be reported as findings.
