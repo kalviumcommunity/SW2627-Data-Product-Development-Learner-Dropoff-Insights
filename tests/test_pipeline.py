@@ -3,6 +3,7 @@ from __future__ import annotations
 import sqlite3
 import tempfile
 import unittest
+from contextlib import closing
 from pathlib import Path
 
 import pandas as pd
@@ -121,7 +122,7 @@ class TestDataPipeline(unittest.TestCase):
             self.assertEqual(aggregate_frame.iloc[0]["total_sessions"], 1)
             self.assertEqual(aggregate_frame.iloc[0]["latest_quiz_score"], 80.0)
 
-            with sqlite3.connect(database_path) as connection:
+            with closing(sqlite3.connect(database_path)) as connection:
                 recorded_results = connection.execute(
                     "SELECT COUNT(*) FROM data_quality_results"
                 ).fetchone()[0]
@@ -172,7 +173,7 @@ class TestDataPipeline(unittest.TestCase):
             self.assertEqual(result.aggregate_row_count, 0)
             self.assertFalse(aggregate_output_path.exists())
 
-            with sqlite3.connect(database_path) as connection:
+            with closing(sqlite3.connect(database_path)) as connection:
                 raw_file_result = connection.execute(
                     """
                     SELECT status, failed_row_count
@@ -182,6 +183,28 @@ class TestDataPipeline(unittest.TestCase):
                 ).fetchone()
 
             self.assertEqual(raw_file_result, ("failed", 5))
+
+    def test_pipeline_releases_database_file_after_run(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp_path = Path(tmpdir)
+            raw_dir = tmp_path / "raw"
+            raw_dir.mkdir()
+            database_path = tmp_path / "learner_dropoff.sqlite"
+            aggregate_output_path = tmp_path / "learner_course_aggregates.csv"
+            write_complete_raw_fixture(raw_dir)
+
+            result = run_pipeline(
+                raw_dir=raw_dir,
+                database_path=database_path,
+                schema_path=SCHEMA_PATH,
+                aggregate_output_path=aggregate_output_path,
+                aggregate_query_path=AGGREGATE_QUERY_PATH,
+                strict_raw=True,
+            )
+
+            self.assertEqual(result.return_code, 0)
+            database_path.unlink()
+            self.assertFalse(database_path.exists())
 
 
 if __name__ == "__main__":

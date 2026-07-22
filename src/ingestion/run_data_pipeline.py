@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -111,7 +112,7 @@ def run_pipeline(
     create_database(database_path, schema_path)
     missing_files, loaded_tables = load_available_files(raw_dir, database_path)
 
-    with sqlite3.connect(database_path) as connection:
+    with closing(sqlite3.connect(database_path)) as connection, connection:
         quality_results = run_quality_checks(connection)
         if strict_raw and missing_files:
             quality_results.append(

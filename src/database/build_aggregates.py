@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 import pandas as pd
@@ -138,7 +139,7 @@ def main() -> int:
             "Run src/ingestion/load_raw_data.py first."
         )
 
-    with sqlite3.connect(args.database) as connection:
+    with closing(sqlite3.connect(args.database)) as connection, connection:
         validate_database(connection, args.database)
 
         enrollment_count = table_row_count(connection, "enrollments")
