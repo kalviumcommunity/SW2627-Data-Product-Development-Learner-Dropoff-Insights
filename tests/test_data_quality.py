@@ -1,10 +1,16 @@
 from __future__ import annotations
 
 import sqlite3
+import sys
+import tempfile
 import unittest
+from contextlib import closing
+from pathlib import Path
+from unittest.mock import patch
 
 from src.ingestion.validate_data_quality import (
     QualityResult,
+    main,
     run_quality_checks,
     write_quality_results,
 )
@@ -158,6 +164,23 @@ class TestDataQualityValidation(unittest.TestCase):
                 results["required_columns:courses"].failed_row_count,
                 1,
             )
+
+    def test_standalone_validation_releases_database_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            database_path = Path(tmpdir) / "quality-check.sqlite"
+            with closing(sqlite3.connect(database_path)) as connection:
+                create_source_tables(connection)
+                connection.commit()
+
+            with patch.object(
+                sys,
+                "argv",
+                ["validate_data_quality.py", "--database", str(database_path)],
+            ):
+                self.assertEqual(main(), 0)
+
+            database_path.unlink()
+            self.assertFalse(database_path.exists())
 
 
 if __name__ == "__main__":
