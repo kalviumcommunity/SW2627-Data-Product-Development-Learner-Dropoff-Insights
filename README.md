@@ -131,6 +131,22 @@ python -m unittest discover -s tests -p "test_*.py"
 
 The test suite includes feature-output checks and dashboard helper checks against the sample learner aggregate fixture.
 
+## Run Feature and Driver Analysis
+
+After `learner_course_aggregates.csv` is generated, create both dashboard analysis files with:
+
+```bash
+python src/analysis/run_analysis_pipeline.py
+```
+
+For mentor review or final reporting, require rankings calculated from observed data:
+
+```bash
+python src/analysis/run_analysis_pipeline.py --require-observed
+```
+
+The strict command returns a failure code when the available data can only produce illustrative fallback rankings.
+
 ## Suggested Repository Structure
 
 ```text
