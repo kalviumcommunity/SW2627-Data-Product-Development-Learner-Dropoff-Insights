@@ -129,7 +129,9 @@ python -m compileall src
 python -m unittest discover -s tests -p "test_*.py"
 ```
 
-The test suite includes feature-output checks and dashboard helper checks against the sample learner aggregate fixture.
+The test suite includes feature-output checks, dashboard helper checks, and a
+temporary raw-to-driver integration test. The integration fixture is created
+inside a temporary folder, so synthetic and processed data are not committed.
 
 ## Suggested Repository Structure
 
