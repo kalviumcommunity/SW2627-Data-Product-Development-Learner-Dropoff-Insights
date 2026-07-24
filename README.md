@@ -115,7 +115,7 @@ Dashboard usage:
 After placing raw CSV files in `data/raw/`, run the Monesh-owned data pipeline:
 
 ```bash
-python src/ingestion/run_data_pipeline.py
+python -m src.ingestion.run_data_pipeline
 ```
 
 This creates the SQLite database, records data quality results, and exports `data/processed/learner_course_aggregates.csv`.
@@ -129,20 +129,22 @@ python -m compileall src
 python -m unittest discover -s tests -p "test_*.py"
 ```
 
-The test suite includes feature-output checks and dashboard helper checks against the sample learner aggregate fixture.
+The test suite includes feature-output checks, dashboard helper checks, and a
+temporary raw-to-driver integration test. The integration fixture is created
+inside a temporary folder, so synthetic and processed data are not committed.
 
 ## Run Feature and Driver Analysis
 
 After `learner_course_aggregates.csv` is generated, create both dashboard analysis files with:
 
 ```bash
-python src/analysis/run_analysis_pipeline.py
+python -m src.analysis.run_analysis_pipeline
 ```
 
 For mentor review or final reporting, require rankings calculated from observed data:
 
 ```bash
-python src/analysis/run_analysis_pipeline.py --require-observed
+python -m src.analysis.run_analysis_pipeline --require-observed
 ```
 
 The strict command returns a failure code when the available data can only produce illustrative fallback rankings.

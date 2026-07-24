@@ -17,7 +17,7 @@ Generated database files should be rebuilt from raw data and scripts. Avoid manu
 After loading raw CSV files into SQLite, generate the analysis handoff CSV with:
 
 ```bash
-python src/database/build_aggregates.py
+python -m src.database.build_aggregates
 ```
 
 ## Full Data Pipeline Command
@@ -25,11 +25,11 @@ python src/database/build_aggregates.py
 To run ingestion, data quality validation, and aggregate export together:
 
 ```bash
-python src/ingestion/run_data_pipeline.py
+python -m src.ingestion.run_data_pipeline
 ```
 
 Use strict mode when the real raw dataset is available and all expected files must be present:
 
 ```bash
-python src/ingestion/run_data_pipeline.py --strict-raw
+python -m src.ingestion.run_data_pipeline --strict-raw
 ```
