@@ -120,7 +120,7 @@ This is enough to protect the first analysis and dashboard iteration.
 After raw files are loaded into SQLite, run:
 
 ```bash
-python src/ingestion/validate_data_quality.py
+python -m src.ingestion.validate_data_quality
 ```
 
 The script writes one row per validation result into `data_quality_results`.
