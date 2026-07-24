@@ -133,6 +133,22 @@ The test suite includes feature-output checks, dashboard helper checks, and a
 temporary raw-to-driver integration test. The integration fixture is created
 inside a temporary folder, so synthetic and processed data are not committed.
 
+## Run Feature and Driver Analysis
+
+After `learner_course_aggregates.csv` is generated, create both dashboard analysis files with:
+
+```bash
+python src/analysis/run_analysis_pipeline.py
+```
+
+For mentor review or final reporting, require rankings calculated from observed data:
+
+```bash
+python src/analysis/run_analysis_pipeline.py --require-observed
+```
+
+The strict command returns a failure code when the available data can only produce illustrative fallback rankings.
+
 ## Suggested Repository Structure
 
 ```text

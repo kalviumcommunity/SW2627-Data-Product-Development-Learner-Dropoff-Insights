@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -474,7 +475,7 @@ def main() -> int:
             "Run src/ingestion/load_raw_data.py first."
         )
 
-    with sqlite3.connect(args.database) as connection:
+    with closing(sqlite3.connect(args.database)) as connection, connection:
         results = run_quality_checks(connection)
         write_quality_results(connection, results)
 
